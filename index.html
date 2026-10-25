@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hess 百貨特賣週：一週七天英語大冒險</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+    }
+    .bounce-in {
+      animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.7); }
+      80% { transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+  </style>
+</head>
+<body class="bg-amber-50 min-h-screen flex flex-col items-center p-3 sm:p-4 selection:bg-amber-200">
+
+  <!-- 頂部資訊列 -->
+  <header class="w-full max-w-3xl flex flex-col sm:flex-row items-center justify-between bg-white rounded-2xl p-4 sm:p-5 shadow-md border-2 border-amber-200 mb-4">
+    <div class="flex items-center gap-3 mb-3 sm:mb-0">
+      <div class="bg-amber-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-inner shrink-0">
+        🦁
+      </div>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-amber-900 tracking-wide">Hess 百貨特賣週：一週七天大挑戰</h1>
+        <p class="text-xs sm:text-sm text-amber-700">Super Fun 5 · Lesson 1-1 互動檢核遊戲</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="bg-amber-100 text-amber-900 font-bold px-4 py-2 rounded-xl text-center border border-amber-300">
+        <span class="text-xs block text-amber-700">總得分 Score</span>
+        <span id="score-display" class="text-2xl font-bold text-amber-600">0</span>
+      </div>
+      <button id="sound-btn" onclick="toggleSound()" class="bg-amber-100 hover:bg-amber-200 text-amber-800 p-3 rounded-xl border border-amber-300 transition">
+        <span id="sound-icon">🔊</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主要遊戲容器 -->
+  <main class="w-full max-w-3xl bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-4 border-amber-300 relative overflow-hidden flex-1 flex flex-col justify-between">
+    
+    <!-- 全局導航工具列（每個關卡頁面皆會顯示「回主選單」、「重刷本關」與「快速選關」） -->
+    <div id="game-stats-bar" class="hidden mb-4 border-b border-gray-100 pb-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+        <div class="flex items-center gap-2">
+          <!-- 返回主選單按鈕 -->
+          <button onclick="goHome()" class="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-amber-100 text-gray-700 hover:text-amber-900 rounded-xl text-xs sm:text-sm font-bold border border-gray-200 transition">
+            🏠 主選單
+          </button>
+          <!-- 重新開始目前關卡 -->
+          <button onclick="restartCurrentStage()" class="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs sm:text-sm font-bold border border-amber-300 transition">
+            🔄 重測本關
+          </button>
+        </div>
+
+        <!-- 快速切換關卡標籤 -->
+        <div class="flex items-center gap-1 text-xs font-bold">
+          <button onclick="startGame(1)" id="nav-btn-1" class="px-2.5 py-1 rounded-lg border transition">第 1 關</button>
+          <button onclick="startGame(2)" id="nav-btn-2" class="px-2.5 py-1 rounded-lg border transition">第 2 關</button>
+          <button onclick="startGame(3)" id="nav-btn-3" class="px-2.5 py-1 rounded-lg border transition">第 3 關</button>
+        </div>
+      </div>
+
+      <!-- 進度條 -->
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <div class="flex items-center gap-2">
+          <span id="stage-badge" class="bg-amber-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">關卡 1</span>
+          <span id="stage-title" class="text-xs sm:text-sm font-bold text-gray-700">縮寫連線配對</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-400 font-medium">進度</span>
+          <div class="w-24 sm:w-32 bg-gray-100 h-2.5 rounded-full overflow-hidden border border-gray-200">
+            <div id="progress-bar" class="bg-amber-500 h-full w-0 transition-all duration-300"></div>
+          </div>
+          <span id="progress-text" class="text-xs font-bold text-gray-600">0/7</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 首頁選單 -->
+    <section id="view-welcome" class="text-center py-6 flex-1 flex flex-col justify-center items-center">
+      <div class="text-6xl mb-4 animate-bounce">🎪</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-900 mb-2">歡迎來到 Hess 百貨一週特賣會！</h2>
+      <p class="text-gray-600 max-w-md mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+        可點選下方任一關卡開始，作答途中隨時能點擊按鍵切換或重置關卡！
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-lg mb-8 text-left">
+        <div class="bg-amber-50 p-4 rounded-xl border-2 border-amber-200 hover:border-amber-400 transition cursor-pointer" onclick="startGame(1)">
+          <div class="text-2xl mb-1">🔗 第一關</div>
+          <h3 class="font-bold text-amber-900">縮寫速配王</h3>
+          <p class="text-xs text-gray-500 mt-1">簡寫與完整星期的快速配對</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-xl border-2 border-blue-200 hover:border-blue-400 transition cursor-pointer" onclick="startGame(2)">
+          <div class="text-2xl mb-1">🔠 第二關</div>
+          <h3 class="font-bold text-blue-900">字母拼字王</h3>
+          <p class="text-xs text-gray-500 mt-1">重組打亂的字母拼出完整單字</p>
+        </div>
+        <div class="bg-emerald-50 p-4 rounded-xl border-2 border-emerald-200 hover:border-emerald-400 transition cursor-pointer" onclick="startGame(3)">
+          <div class="text-2xl mb-1">🏪 第三關</div>
+          <h3 class="font-bold text-emerald-900">特賣會問答</h3>
+          <p class="text-xs text-gray-500 mt-1">看月曆日期與星期縮寫回答完整英文！</p>
+        </div>
+      </div>
+
+      <button onclick="startGame(1)" class="w-full sm:w-auto px-8 py-3.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-lg rounded-2xl shadow-lg shadow-amber-300/50 transition">
+        開始全套大闖關 🚀
+      </button>
+    </section>
+
+    <!-- 第一關：縮寫配對 -->
+    <section id="view-stage1" class="hidden flex-1 flex flex-col justify-center">
+      <div class="text-center mb-5">
+        <p class="text-sm text-amber-800 font-semibold">請點選左側「縮寫」再點選右側「完整星期英文」完成配對：</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 sm:gap-8 max-w-xl mx-auto w-full">
+        <div id="abbr-col" class="space-y-2.5 flex flex-col"></div>
+        <div id="full-col" class="space-y-2.5 flex flex-col"></div>
+      </div>
+    </section>
+
+    <!-- 第二關：拼字 -->
+    <section id="view-stage2" class="hidden flex-1 flex flex-col justify-center items-center text-center">
+      <div class="mb-4">
+        <span id="spelling-hint-chinese" class="inline-block bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full mb-2">星期一</span>
+        <div id="spelling-abbr-tag" class="text-xs text-gray-500 font-mono">縮寫：Mon.</div>
+      </div>
+
+      <div id="spelling-slots" class="flex flex-wrap justify-center gap-2 mb-7 min-h-[56px] p-2 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 w-full max-w-md"></div>
+      <div id="spelling-pool" class="flex flex-wrap justify-center gap-2.5 max-w-md mb-6"></div>
+
+      <div class="flex gap-3">
+        <button onclick="resetCurrentSpelling()" class="px-4 py-2 text-xs sm:text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition">
+          🔄 清除重拼
+        </button>
+        <button onclick="checkSpelling()" class="px-6 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 rounded-xl shadow-md transition">
+          ✅ 確認答案
+        </button>
+      </div>
+    </section>
+
+    <!-- 第三關：特賣會問答 -->
+    <section id="view-stage3" class="hidden flex-1 flex flex-col justify-center">
+      <div class="bg-gradient-to-r from-red-500 to-amber-500 rounded-3xl p-1 shadow-lg max-w-lg mx-auto w-full mb-5">
+        <div class="bg-white rounded-[22px] p-4 sm:p-5 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="border-4 border-red-500 rounded-2xl overflow-hidden shadow-sm text-center w-28 shrink-0">
+              <div class="bg-red-500 text-white text-[11px] font-black py-0.5 tracking-wider uppercase">SEPTEMBER</div>
+              <div id="dialogue-date-day" class="bg-white text-gray-900 text-3xl font-black py-0.5">18</div>
+              <div id="dialogue-weekday-abbr" class="bg-amber-400 text-amber-950 text-xs font-black py-1 border-t border-amber-300">
+                Mon. (星期一)
+              </div>
+            </div>
+
+            <div>
+              <div class="inline-flex items-center gap-1.5 bg-red-100 text-red-700 text-xs font-black px-2.5 py-0.5 rounded-full mb-1">
+                <span id="dialogue-date-badge">Sep. 18 特賣日</span>
+                <span class="bg-red-500 text-white px-1.5 py-0.2 rounded text-[10px]">SALES</span>
+              </div>
+              <div id="dialogue-store" class="text-base sm:text-lg font-black text-gray-800">
+                🦒 長頸鹿服飾店
+              </div>
+              <div id="dialogue-store-en" class="text-xs text-gray-500 font-medium">
+                Giraffe Shop Special Sale
+              </div>
+            </div>
+          </div>
+          <div class="text-4xl hidden sm:block">🛍️</div>
+        </div>
+      </div>
+
+      <!-- 對話區塊 -->
+      <div class="max-w-lg mx-auto w-full space-y-3 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-lg shrink-0 border border-indigo-200">
+            ❓
+          </div>
+          <div class="bg-indigo-50 border border-indigo-200 rounded-2xl rounded-tl-none px-4 py-2 text-indigo-950 font-bold text-base sm:text-lg">
+            What day is today?
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 flex-row-reverse">
+          <div class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-lg shrink-0 border border-emerald-200">
+            💬
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl rounded-tr-none px-4 py-2.5 text-emerald-950 font-semibold w-full">
+            <span class="text-xs block text-emerald-600 font-bold mb-0.5">請選出正確回答：</span>
+            <div id="dialogue-answer-preview" class="text-lg font-bold text-emerald-800">
+              It's __________.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 選項區塊 -->
+      <div id="dialogue-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-lg mx-auto w-full"></div>
+    </section>
+
+    <!-- 結算頁面 -->
+    <section id="view-result" class="hidden text-center py-6 flex-1 flex flex-col justify-center items-center">
+      <div class="text-6xl mb-3 animate-bounce">🏆</div>
+      <h2 class="text-3xl font-black text-amber-900 mb-1">太棒了！挑戰成功！</h2>
+      <p class="text-sm text-gray-600 mb-6">你已經完全熟練 Super Fun 5 學習單的所有內容！</p>
+
+      <div class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-6 w-full max-w-sm mb-6 shadow-sm">
+        <div class="text-xs font-bold text-amber-700 tracking-wider uppercase mb-1">最終檢核得分</div>
+        <div id="final-score" class="text-5xl font-black text-amber-600 mb-4">100</div>
+        
+        <div class="space-y-2 text-left text-sm text-gray-700 border-t border-amber-200 pt-4 font-medium">
+          <div class="flex justify-between">
+            <span>縮寫與單字配對：</span>
+            <span class="font-bold text-emerald-600">✅ 全部正確</span>
+          </div>
+          <div class="flex justify-between">
+            <span>星期拼字檢核：</span>
+            <span class="font-bold text-emerald-600">✅ 拼寫無誤</span>
+          </div>
+          <div class="flex justify-between">
+            <span>特賣日期問答：</span>
+            <span class="font-bold text-emerald-600">✅ 句型精通</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <button onclick="startGame(1)" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition">
+          重新挑戰 🔁
+        </button>
+        <button onclick="goHome()" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition">
+          回主選單 🏠
+        </button>
+      </div>
+    </section>
+
+    <!-- 浮動提示 -->
+    <div id="feedback-banner" class="hidden absolute top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full font-bold shadow-lg text-sm sm:text-base z-30 transition-all duration-300">
+    </div>
+  </main>
+
+  <script>
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function playTone(freq, type = 'sine', duration = 0.15) {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playSuccessSound() {
+      playTone(523.25, 'sine', 0.1);
+      setTimeout(() => playTone(659.25, 'sine', 0.1), 100);
+      setTimeout(() => playTone(783.99, 'sine', 0.2), 200);
+    }
+
+    function playErrorSound() {
+      playTone(220, 'triangle', 0.2);
+      setTimeout(() => playTone(196, 'triangle', 0.25), 150);
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+    }
+
+    // 學習單 7 天特賣對照表（Sep. 18 Mon. ~ Sep. 24 Sun.）
+    const DAYS_DATA = [
+      { day: "Monday", abbr: "Mon.", dateFull: "Sep. 18", dayNum: "18", zh: "星期一", storeZh: "🦁 獅子玩具屋", storeEn: "Lion Toy Store" },
+      { day: "Tuesday", abbr: "Tue.", dateFull: "Sep. 19", dayNum: "19", zh: "星期二", storeZh: "🦒 長頸鹿童裝店", storeEn: "Giraffe Clothes Shop" },
+      { day: "Wednesday", abbr: "Wed.", dateFull: "Sep. 20", dayNum: "20", zh: "星期三", storeZh: "🐘 大象故事繪本館", storeEn: "Elephant Book Store" },
+      { day: "Thursday", abbr: "Thur.", dateFull: "Sep. 21", dayNum: "21", zh: "星期四", storeZh: "🐵 淘氣猴運動館", storeEn: "Monkey Sports" },
+      { day: "Friday", abbr: "Fri.", dateFull: "Sep. 22", dayNum: "22", zh: "星期五", storeZh: "🐼 熊貓精緻文具", storeEn: "Panda Stationery" },
+      { day: "Saturday", abbr: "Sat.", dateFull: "Sep. 23", dayNum: "23", zh: "星期六", storeZh: "🦓 斑馬美味烘焙屋", storeEn: "Zebra Bakery" },
+      { day: "Sunday", abbr: "Sun.", dateFull: "Sep. 24", dayNum: "24", zh: "星期日", storeZh: "🐻 熊熊歡樂冰淇淋", storeEn: "Bear Ice Cream Shop" }
+    ];
+
+    let currentStage = 1;
+    let totalScore = 0;
+    let stage1SelectedAbbr = null;
+    let stage1SelectedFull = null;
+    let stage1MatchedCount = 0;
+
+    let stage2Index = 0;
+    let stage2CurrentLetters = [];
+    let stage2TargetWord = "";
+
+    let stage3Index = 0;
+    let stage3Questions = [];
+
+    function updateScore(points) {
+      totalScore += points;
+      document.getElementById('score-display').textContent = totalScore;
+    }
+
+    function showBanner(text, isSuccess = true) {
+      const banner = document.getElementById('feedback-banner');
+      banner.textContent = text;
+      banner.className = isSuccess 
+        ? "absolute top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full font-bold shadow-lg text-sm sm:text-base z-30 transition-all duration-300 bg-emerald-500 text-white bounce-in"
+        : "absolute top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full font-bold shadow-lg text-sm sm:text-base z-30 transition-all duration-300 bg-rose-500 text-white shake";
+      banner.classList.remove('hidden');
+      setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 1500);
+    }
+
+    function switchView(viewId) {
+      ['view-welcome', 'view-stage1', 'view-stage2', 'view-stage3', 'view-result'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(viewId).classList.remove('hidden');
+
+      const statsBar = document.getElementById('game-stats-bar');
+      if (viewId === 'view-welcome' || viewId === 'view-result') {
+        statsBar.classList.add('hidden');
+      } else {
+        statsBar.classList.remove('hidden');
+      }
+    }
+
+    function goHome() {
+      switchView('view-welcome');
+    }
+
+    function restartCurrentStage() {
+      loadStage(currentStage);
+      showBanner("關卡已重設！", true);
+    }
+
+    function updateNavButtons(stageNum) {
+      [1, 2, 3].forEach(num => {
+        const btn = document.getElementById(`nav-btn-${num}`);
+        if (!btn) return;
+        if (num === stageNum) {
+          btn.className = "px-2.5 py-1 rounded-lg border font-bold bg-amber-500 text-white border-amber-600 shadow-sm";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg border font-bold bg-gray-50 hover:bg-gray-100 text-gray-600 border-gray-200";
+        }
+      });
+    }
+
+    function startGame(stageNumber) {
+      currentStage = stageNumber;
+      if (stageNumber === 1 && totalScore === 0) {
+        document.getElementById('score-display').textContent = totalScore;
+      }
+      loadStage(stageNumber);
+    }
+
+    function loadStage(stageNum) {
+      currentStage = stageNum;
+      updateNavButtons(stageNum);
+
+      const stageBadge = document.getElementById('stage-badge');
+      const stageTitle = document.getElementById('stage-title');
+
+      if (stageNum === 1) {
+        stageBadge.textContent = "第一關";
+        stageTitle.textContent = "縮寫速配王 (Abbreviations)";
+        switchView('view-stage1');
+        initStage1();
+      } else if (stageNum === 2) {
+        stageBadge.textContent = "第二關";
+        stageTitle.textContent = "字母拼字王 (Spelling)";
+        switchView('view-stage2');
+        initStage2();
+      } else if (stageNum === 3) {
+        stageBadge.textContent = "第三關";
+        stageTitle.textContent = "特賣問答句 (What day is today?)";
+        switchView('view-stage3');
+        initStage3();
+      }
+    }
+
+    // ==========================================
+    // STAGE 1
+    // ==========================================
+    function initStage1() {
+      stage1SelectedAbbr = null;
+      stage1SelectedFull = null;
+      stage1MatchedCount = 0;
+      updateProgress(0, 7);
+
+      const abbrCol = document.getElementById('abbr-col');
+      const fullCol = document.getElementById('full-col');
+      abbrCol.innerHTML = '';
+      fullCol.innerHTML = '';
+
+      const shuffledAbbr = [...DAYS_DATA].sort(() => Math.random() - 0.5);
+      const shuffledFull = [...DAYS_DATA].sort(() => Math.random() - 0.5);
+
+      shuffledAbbr.forEach(item => {
+        const btn = document.createElement('button');
+        btn.id = `abbr-${item.day}`;
+        btn.className = "w-full text-center py-2.5 px-3 bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 rounded-xl font-bold text-amber-900 text-sm sm:text-base transition";
+        btn.textContent = `${item.abbr} (${item.zh})`;
+        btn.onclick = () => selectAbbr(item.day, btn);
+        abbrCol.appendChild(btn);
+      });
+
+      shuffledFull.forEach(item => {
+        const btn = document.createElement('button');
+        btn.id = `full-${item.day}`;
+        btn.className = "w-full text-center py-2.5 px-3 bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 rounded-xl font-bold text-blue-900 text-sm sm:text-base transition";
+        btn.textContent = item.day;
+        btn.onclick = () => selectFull(item.day, btn);
+        fullCol.appendChild(btn);
+      });
+    }
+
+    function selectAbbr(day, btn) {
+      if (btn.disabled) return;
+      document.querySelectorAll('#abbr-col button').forEach(b => {
+        if (!b.disabled) b.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-200');
+      });
+      btn.classList.add('ring-4', 'ring-amber-400', 'bg-amber-200');
+      stage1SelectedAbbr = day;
+      checkStage1Match();
+    }
+
+    function selectFull(day, btn) {
+      if (btn.disabled) return;
+      document.querySelectorAll('#full-col button').forEach(b => {
+        if (!b.disabled) b.classList.remove('ring-4', 'ring-blue-400', 'bg-blue-200');
+      });
+      btn.classList.add('ring-4', 'ring-blue-400', 'bg-blue-200');
+      stage1SelectedFull = day;
+      checkStage1Match();
+    }
+
+    function checkStage1Match() {
+      if (!stage1SelectedAbbr || !stage1SelectedFull) return;
+
+      const abbrBtn = document.getElementById(`abbr-${stage1SelectedAbbr}`);
+      const fullBtn = document.getElementById(`full-${stage1SelectedFull}`);
+
+      if (stage1SelectedAbbr === stage1SelectedFull) {
+        playSuccessSound();
+        showBanner(`正確配對！${stage1SelectedAbbr}`, true);
+        updateScore(10);
+
+        abbrBtn.disabled = true;
+        fullBtn.disabled = true;
+        abbrBtn.className = "w-full py-2.5 px-3 bg-emerald-100 border-2 border-emerald-400 text-emerald-800 rounded-xl font-bold text-sm sm:text-base opacity-60 cursor-not-allowed";
+        fullBtn.className = "w-full py-2.5 px-3 bg-emerald-100 border-2 border-emerald-400 text-emerald-800 rounded-xl font-bold text-sm sm:text-base opacity-60 cursor-not-allowed";
+
+        stage1MatchedCount++;
+        updateProgress(stage1MatchedCount, 7);
+
+        stage1SelectedAbbr = null;
+        stage1SelectedFull = null;
+
+        if (stage1MatchedCount === 7) {
+          setTimeout(() => {
+            showBanner("🎉 第一關完成！進入拼字挑戰！", true);
+            setTimeout(() => loadStage(2), 1200);
+          }, 600);
+        }
+      } else {
+        playErrorSound();
+        showBanner("配對錯誤，再試一次看看！", false);
+        abbrBtn.classList.add('shake');
+        fullBtn.classList.add('shake');
+
+        setTimeout(() => {
+          abbrBtn.classList.remove('shake', 'ring-4', 'ring-amber-400', 'bg-amber-200');
+          fullBtn.classList.remove('shake', 'ring-4', 'ring-blue-400', 'bg-blue-200');
+          stage1SelectedAbbr = null;
+          stage1SelectedFull = null;
+        }, 500);
+      }
+    }
+
+    // ==========================================
+    // STAGE 2
+    // ==========================================
+    let SPELLING_ORDER = [0, 1, 2, 3, 4, 5, 6];
+
+    function initStage2() {
+      stage2Index = 0;
+      SPELLING_ORDER = [0, 1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
+      loadSpellingQuestion();
+    }
+
+    function loadSpellingQuestion() {
+      updateProgress(stage2Index, SPELLING_ORDER.length);
+      const targetData = DAYS_DATA[SPELLING_ORDER[stage2Index]];
+      stage2TargetWord = targetData.day;
+      stage2CurrentLetters = [];
+
+      document.getElementById('spelling-hint-chinese').textContent = targetData.zh;
+      document.getElementById('spelling-abbr-tag').textContent = `縮寫提示：${targetData.abbr}`;
+
+      renderSpellingSlots();
+      renderSpellingPool();
+    }
+
+    function renderSpellingSlots() {
+      const container = document.getElementById('spelling-slots');
+      container.innerHTML = '';
+
+      for (let i = 0; i < stage2TargetWord.length; i++) {
+        const slot = document.createElement('div');
+        const letter = stage2CurrentLetters[i] || '';
+        slot.className = `w-9 h-11 sm:w-11 sm:h-13 rounded-xl border-2 flex items-center justify-center font-bold text-lg sm:text-xl transition ${
+          letter 
+            ? 'bg-blue-500 text-white border-blue-600 shadow-sm' 
+            : 'bg-white border-gray-300 border-dashed text-transparent'
+        }`;
+        slot.textContent = letter || '_';
+        container.appendChild(slot);
+      }
+    }
+
+    let activePoolButtons = [];
+
+    function renderSpellingPool() {
+      const pool = document.getElementById('spelling-pool');
+      pool.innerHTML = '';
+      activePoolButtons = [];
+
+      const letters = stage2TargetWord.split('').sort(() => Math.random() - 0.5);
+
+      letters.forEach((char, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `pool-btn-${idx}`;
+        btn.className = "w-10 h-12 sm:w-12 sm:h-14 bg-white border-2 border-blue-300 hover:border-blue-500 rounded-xl font-bold text-lg sm:text-xl text-blue-900 shadow-sm transition active:scale-95 flex items-center justify-center";
+        btn.textContent = char;
+        btn.onclick = () => pickLetter(char, btn);
+        pool.appendChild(btn);
+      });
+    }
+
+    function pickLetter(char, btn) {
+      if (stage2CurrentLetters.length < stage2TargetWord.length) {
+        stage2CurrentLetters.push(char);
+        btn.classList.add('opacity-30', 'pointer-events-none');
+        activePoolButtons.push(btn);
+        playTone(440 + stage2CurrentLetters.length * 40, 'sine', 0.08);
+        renderSpellingSlots();
+      }
+    }
+
+    function resetCurrentSpelling() {
+      stage2CurrentLetters = [];
+      activePoolButtons.forEach(btn => btn.classList.remove('opacity-30', 'pointer-events-none'));
+      activePoolButtons = [];
+      renderSpellingSlots();
+    }
+
+    function checkSpelling() {
+      const assembled = stage2CurrentLetters.join('');
+      if (assembled === stage2TargetWord) {
+        playSuccessSound();
+        showBanner(`太棒了！拼寫正確：${stage2TargetWord}`, true);
+        updateScore(15);
+        stage2Index++;
+
+        if (stage2Index < SPELLING_ORDER.length) {
+          setTimeout(() => loadSpellingQuestion(), 800);
+        } else {
+          updateProgress(SPELLING_ORDER.length, SPELLING_ORDER.length);
+          setTimeout(() => {
+            showBanner("🎉 第二關完成！進入百貨特賣問答！", true);
+            setTimeout(() => loadStage(3), 1200);
+          }, 800);
+        }
+      } else {
+        playErrorSound();
+        showBanner("字母順序不對喔，再試試看！", false);
+        document.getElementById('spelling-slots').classList.add('shake');
+        setTimeout(() => {
+          document.getElementById('spelling-slots').classList.remove('shake');
+        }, 500);
+      }
+    }
+
+    // ==========================================
+    // STAGE 3
+    // ==========================================
+    function initStage3() {
+      stage3Index = 0;
+      stage3Questions = [...DAYS_DATA].sort(() => Math.random() - 0.5);
+      loadStage3Question();
+    }
+
+    function loadStage3Question() {
+      updateProgress(stage3Index, stage3Questions.length);
+      const current = stage3Questions[stage3Index];
+
+      document.getElementById('dialogue-date-day').textContent = current.dayNum;
+      document.getElementById('dialogue-weekday-abbr').textContent = `${current.abbr} (${current.zh})`;
+      document.getElementById('dialogue-date-badge').textContent = `${current.dateFull} 特賣日`;
+      document.getElementById('dialogue-store').textContent = current.storeZh;
+      document.getElementById('dialogue-store-en').textContent = current.storeEn;
+      document.getElementById('dialogue-answer-preview').textContent = "It's __________.";
+
+      const distractors = DAYS_DATA.filter(d => d.day !== current.day)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+        .map(d => d.day);
+
+      const options = [current.day, ...distractors].sort(() => Math.random() - 0.5);
+
+      const optionsContainer = document.getElementById('dialogue-options');
+      optionsContainer.innerHTML = '';
+
+      options.forEach(dayName => {
+        const btn = document.createElement('button');
+        btn.className = "py-3 px-4 bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 hover:border-emerald-500 rounded-2xl font-bold text-emerald-900 text-base sm:text-lg transition flex items-center justify-between active:scale-95";
+        btn.innerHTML = `
+          <span>It's ${dayName}.</span>
+          <span class="text-xs bg-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold">選擇</span>
+        `;
+        btn.onclick = () => answerStage3(dayName, current.day);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function answerStage3(selectedDay, correctDay) {
+      if (selectedDay === correctDay) {
+        playSuccessSound();
+        document.getElementById('dialogue-answer-preview').textContent = `It's ${correctDay}. 🎉`;
+        showBanner(`答對了！It's ${correctDay}.`, true);
+        updateScore(20);
+
+        stage3Index++;
+        if (stage3Index < stage3Questions.length) {
+          setTimeout(() => loadStage3Question(), 1000);
+        } else {
+          updateProgress(stage3Questions.length, stage3Questions.length);
+          setTimeout(() => showFinalResult(), 1000);
+        }
+      } else {
+        playErrorSound();
+        showBanner(`不對喔！請參考看板上的縮寫：${stage3Questions[stage3Index].abbr}`, false);
+      }
+    }
+
+    function updateProgress(curr, total) {
+      const pct = Math.round((curr / total) * 100);
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+      document.getElementById('progress-text').textContent = `${curr}/${total}`;
+    }
+
+    function showFinalResult() {
+      switchView('view-result');
+      document.getElementById('final-score').textContent = totalScore;
+      playSuccessSound();
+    }
+  </script>
+</body>
+</html>
