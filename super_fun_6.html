@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Fun 6: 英語時空大冒險 (Lesson 1 What Day Is Today? 聽力互動練習)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+      background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    }
+    .custom-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+    .badge-pop {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .badge-pop:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+    .stage-pill.active {
+      background-color: #3B82F6;
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+    }
+    /* Pulse glow on speaking button */
+    @keyframes pulse-speaker {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .speaking {
+      animation: pulse-speaker 0.8s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 bg-sky-50 pb-16">
+
+  <!-- Top App Navigation -->
+  <header class="bg-white border-b border-sky-100 sticky top-0 z-40 shadow-sm backdrop-blur-md bg-white/95">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 bg-gradient-to-tr from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-md">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-bold text-slate-800 tracking-wide flex items-center gap-2">
+            Super Fun 6 <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-semibold">L1 聽力互動練習</span>
+          </h1>
+          <p class="text-xs text-slate-500">Lesson 1: What Day Is Today? 英語時空大冒險</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-sky-50 px-3 py-1.5 rounded-full border border-sky-200">
+          <i class="fa-solid fa-volume-high text-sky-600"></i>
+          <span class="text-xs font-medium text-sky-700 hidden sm:inline">發音語速:</span>
+          <button onclick="setSpeechRate(0.8)" id="rate-slow" class="text-xs px-2 py-0.5 rounded-md text-slate-600 hover:bg-sky-200 transition">慢速</button>
+          <button onclick="setSpeechRate(1.0)" id="rate-normal" class="text-xs px-2 py-0.5 rounded-md bg-sky-500 text-white font-bold transition">正常</button>
+        </div>
+        
+        <button onclick="checkAllAnswers()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold px-4 py-2 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>交卷評估</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stage Navigator -->
+    <div class="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between overflow-x-auto gap-2 border-t border-sky-50 text-sm no-scrollbar">
+      <button onclick="switchStage(1)" id="pill-1" class="stage-pill active whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm">
+        <span>關卡 1</span> <span class="text-xs opacity-80">發音森林 (12分)</span>
+      </button>
+      <button onclick="switchStage(2)" id="pill-2" class="stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100">
+        <span>關卡 2</span> <span class="text-xs opacity-80">日曆靶場 (12分)</span>
+      </button>
+      <button onclick="switchStage(3)" id="pill-3" class="stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100">
+        <span>關卡 3</span> <span class="text-xs opacity-80">真假探偵 (20分)</span>
+      </button>
+      <button onclick="switchStage(4)" id="pill-4" class="stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100">
+        <span>關卡 4</span> <span class="text-xs opacity-80">分鏡大師 (24分)</span>
+      </button>
+      <button onclick="switchStage(5)" id="pill-5" class="stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100">
+        <span>關卡 5</span> <span class="text-xs opacity-80">最佳應對 (18分)</span>
+      </button>
+      <button onclick="switchStage(6)" id="pill-6" class="stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100">
+        <span>關卡 6</span> <span class="text-xs opacity-80">時程配對 (14分)</span>
+      </button>
+      <button onclick="switchStage(7)" id="pill-7" class="stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100">
+        <span>📊 學習診斷報告</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Game Container -->
+  <main class="max-w-5xl mx-auto px-4 mt-6">
+    
+    <!-- Hero / Progress banner -->
+    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 rounded-3xl p-6 text-white custom-shadow mb-8 relative overflow-hidden">
+      <div class="absolute -right-8 -bottom-8 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="inline-block bg-white/20 backdrop-blur-sm text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-2">Unit Review Adventure</span>
+          <h2 id="stage-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">關卡一：發音辨識森林 (Listen and Check)</h2>
+          <p id="stage-desc" class="text-sm text-blue-100 mt-1">點擊喇叭聆聽單字發音，勾選聽到的正確單字（每題 2 分，共 12 分）。</p>
+        </div>
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl px-5 py-3 flex items-center gap-4 border border-white/20 self-start md:self-auto">
+          <div class="text-center">
+            <div class="text-xs text-blue-200">目前總得分</div>
+            <div id="hero-score" class="text-3xl font-black text-amber-300 tracking-tight">-- / 100</div>
+          </div>
+          <div class="h-8 w-[1px] bg-white/20"></div>
+          <div class="text-center">
+            <div class="text-xs text-blue-200">完成進度</div>
+            <div id="hero-progress" class="text-lg font-bold">0 / 6 關</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 1: Listen and Check -->
+    <section id="stage-1" class="stage-section">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Q1 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow badge-pop">
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">1</span>
+            <button onclick="speakAudio('shock', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放語音</span>
+            </button>
+          </div>
+          <div class="space-y-2.5">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q1" value="chock" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">chock</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q1" value="shock" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">shock</span>
+            </label>
+          </div>
+          <div id="fb-s1-q1" class="mt-3 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow badge-pop">
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">2</span>
+            <button onclick="speakAudio('catch', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放語音</span>
+            </button>
+          </div>
+          <div class="space-y-2.5">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q2" value="cash" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">cash</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q2" value="catch" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">catch</span>
+            </label>
+          </div>
+          <div id="fb-s1-q2" class="mt-3 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow badge-pop">
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">3</span>
+            <button onclick="speakAudio('sheep', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放語音</span>
+            </button>
+          </div>
+          <div class="space-y-2.5">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q3" value="sheep" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">sheep</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q3" value="cheap" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">cheap</span>
+            </label>
+          </div>
+          <div id="fb-s1-q3" class="mt-3 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow badge-pop">
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">4</span>
+            <button onclick="speakAudio('chain', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放語音</span>
+            </button>
+          </div>
+          <div class="space-y-2.5">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q4" value="chain" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">chain</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q4" value="shame" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">shame</span>
+            </label>
+          </div>
+          <div id="fb-s1-q4" class="mt-3 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow badge-pop">
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">5</span>
+            <button onclick="speakAudio('photo', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放語音</span>
+            </button>
+          </div>
+          <div class="space-y-2.5">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q5" value="motto" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">motto</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q5" value="photo" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">photo</span>
+            </label>
+          </div>
+          <div id="fb-s1-q5" class="mt-3 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow badge-pop">
+          <div class="flex items-center justify-between mb-4">
+            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">6</span>
+            <button onclick="speakAudio('phase', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放語音</span>
+            </button>
+          </div>
+          <div class="space-y-2.5">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q6" value="phase" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">phase</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer transition">
+              <input type="radio" name="s1-q6" value="pace" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-3 font-semibold text-slate-700">pace</span>
+            </label>
+          </div>
+          <div id="fb-s1-q6" class="mt-3 text-xs hidden font-medium"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 2: Listen and Circle -->
+    <section id="stage-2" class="stage-section hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Q1 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-slate-700">第 1 題</span>
+            <button onclick="speakAudio('Today is Saturday, March twelfth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放題幹</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q1" value="A" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(A)</div>
+                <div class="text-2xl font-black text-rose-500">8</div>
+                <div class="text-xs font-semibold text-slate-600">星期日</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q1" value="B" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(B)</div>
+                <div class="text-2xl font-black text-indigo-500">9</div>
+                <div class="text-xs font-semibold text-slate-600">星期四</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q1" value="C" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(C)</div>
+                <div class="text-2xl font-black text-emerald-500">12</div>
+                <div class="text-xs font-semibold text-slate-600">Sat.</div>
+              </div>
+            </label>
+          </div>
+          <div id="fb-s2-q1" class="mt-2 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-slate-700">第 2 題</span>
+            <button onclick="speakAudio('It is Wednesday, the eleventh.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放題幹</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q2" value="A" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(A)</div>
+                <div class="text-2xl font-black text-rose-500">10</div>
+                <div class="text-xs font-semibold text-slate-600">星期二</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q2" value="B" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(B)</div>
+                <div class="text-2xl font-black text-indigo-500">11</div>
+                <div class="text-xs font-semibold text-slate-600">星期三</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q2" value="C" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(C)</div>
+                <div class="text-2xl font-black text-emerald-500">12</div>
+                <div class="text-xs font-semibold text-slate-600">星期四</div>
+              </div>
+            </label>
+          </div>
+          <div id="fb-s2-q2" class="mt-2 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-slate-700">第 3 題</span>
+            <button onclick="speakAudio('Today is Tuesday, March fourteenth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放題幹</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q3" value="A" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(A)</div>
+                <div class="text-xs font-semibold text-slate-500">March</div>
+                <div class="text-2xl font-black text-rose-500">14</div>
+                <div class="text-xs font-semibold text-slate-700">Tue. 星期二</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q3" value="B" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(B)</div>
+                <div class="text-xs font-semibold text-transparent select-none">-</div>
+                <div class="text-2xl font-black text-indigo-500">10</div>
+                <div class="text-xs font-semibold text-slate-600">星期二</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q3" value="C" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(C)</div>
+                <div class="text-xs font-semibold text-transparent select-none">-</div>
+                <div class="text-2xl font-black text-emerald-500">8</div>
+                <div class="text-xs font-semibold text-slate-600">星期日</div>
+              </div>
+            </label>
+          </div>
+          <div id="fb-s2-q3" class="mt-2 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-slate-700">第 4 題</span>
+            <button onclick="speakAudio('Today is Friday the thirteenth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放題幹</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q4" value="A" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(A)</div>
+                <div class="text-2xl font-black text-rose-500">9</div>
+                <div class="text-xs font-semibold text-slate-600">星期一</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q4" value="B" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(B)</div>
+                <div class="text-2xl font-black text-indigo-500">11</div>
+                <div class="text-xs font-semibold text-slate-600">星期三</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q4" value="C" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(C)</div>
+                <div class="text-2xl font-black text-emerald-500">13</div>
+                <div class="text-xs font-semibold text-slate-600">星期五</div>
+              </div>
+            </label>
+          </div>
+          <div id="fb-s2-q4" class="mt-2 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-slate-700">第 5 題</span>
+            <button onclick="speakAudio('It is Thursday, the twelfth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放題幹</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q5" value="A" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(A)</div>
+                <div class="text-2xl font-black text-rose-500">14</div>
+                <div class="text-xs font-semibold text-slate-600">星期六</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q5" value="B" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(B)</div>
+                <div class="text-2xl font-black text-indigo-500">13</div>
+                <div class="text-xs font-semibold text-slate-600">星期五</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q5" value="C" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(C)</div>
+                <div class="text-2xl font-black text-emerald-500">12</div>
+                <div class="text-xs font-semibold text-slate-600">星期四</div>
+              </div>
+            </label>
+          </div>
+          <div id="fb-s2-q5" class="mt-2 text-xs hidden font-medium"></div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 custom-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-slate-700">第 6 題</span>
+            <button onclick="speakAudio('Is it Wednesday the eleventh?', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-volume-high"></i> <span>播放題幹</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q6" value="A" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(A)</div>
+                <div class="text-2xl font-black text-rose-500">12</div>
+                <div class="text-xs font-semibold text-slate-600">星期四</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q6" value="B" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(B)</div>
+                <div class="text-2xl font-black text-indigo-500">11</div>
+                <div class="text-xs font-semibold text-slate-600">星期三</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="s2-q6" value="C" class="peer sr-only">
+              <div class="border-2 border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition hover:border-slate-300">
+                <div class="text-xs text-slate-500 font-bold mb-1">(C)</div>
+                <div class="text-2xl font-black text-emerald-500">10</div>
+                <div class="text-xs font-semibold text-slate-600">星期二</div>
+              </div>
+            </label>
+          </div>
+          <div id="fb-s2-q6" class="mt-2 text-xs hidden font-medium"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 3: Listen and Mark O or X -->
+    <section id="stage-3" class="stage-section hidden">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex items-center gap-3 text-amber-900 text-sm">
+        <i class="fa-solid fa-lightbulb text-amber-500 text-xl"></i>
+        <span>仔細聽句子，判斷錄音所描述的星期、日期或線索是否與題目圖卡內容完全相符。相符選 <strong>O</strong>，不符選 <strong>X</strong>。</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Item 1 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">1</span>
+              <button onclick="speakAudio('Today is Friday, September twenty-ninth.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">九月</span>
+              <div class="text-3xl font-black text-slate-800">29</div>
+              <span class="text-xs font-bold text-blue-600">星期五</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-1', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-1', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-1" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">2</span>
+              <button onclick="speakAudio('Today is Tuesday, September twenty-seventh.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">九月</span>
+              <div class="text-3xl font-black text-slate-800">27</div>
+              <span class="text-xs font-bold text-blue-600">星期三</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-2', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-2', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-2" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">3</span>
+              <button onclick="speakAudio('Today is Tuesday, September twenty-sixth.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">九月</span>
+              <div class="text-3xl font-black text-slate-800">26</div>
+              <span class="text-xs font-bold text-blue-600">星期二</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-3', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-3', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-3" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">4</span>
+              <button onclick="speakAudio('Today is Saturday, March nineteenth.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">March</span>
+              <div class="text-3xl font-black text-slate-800">18</div>
+              <span class="text-xs font-bold text-emerald-600">Sat.</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-4', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-4', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-4" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">5</span>
+              <button onclick="speakAudio('It is Tuesday, March fourteenth.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">March</span>
+              <div class="text-3xl font-black text-slate-800">14</div>
+              <span class="text-xs font-bold text-blue-600">Tue.</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-5', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-5', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-5" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">6</span>
+              <button onclick="speakAudio('Everything is fifty percent off this Friday!', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-rose-600">Friday Special</span>
+              <div class="text-2xl font-black text-rose-700">50% off</div>
+              <span class="text-xs font-bold text-slate-600">SALE 特賣會</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-6', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-6', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-6" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">7</span>
+              <button onclick="speakAudio('Today is Saturday, March seventeenth.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">March</span>
+              <div class="text-3xl font-black text-slate-800">17</div>
+              <span class="text-xs font-bold text-blue-600">Fri.</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-7', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-7', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-7" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">8</span>
+              <button onclick="speakAudio('It is six thirty in the morning.', this)" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽句子
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center my-3">
+              <span class="text-xs text-slate-400 font-bold">Time</span>
+              <div class="text-3xl font-black text-indigo-600">6:30</div>
+              <span class="text-xs font-bold text-slate-500">鬧鐘時間</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="selectOX('s3-8', 'O', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-emerald-400 text-emerald-600 hover:bg-emerald-50 transition">O</button>
+            <button onclick="selectOX('s3-8', 'X', this)" class="ox-btn flex-1 py-2 rounded-xl font-black text-base border-2 border-rose-400 text-rose-600 hover:bg-rose-50 transition">X</button>
+          </div>
+          <div id="fb-s3-8" class="text-xs mt-2 hidden font-semibold"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 4: Listen and Number -->
+    <section id="stage-4" class="stage-section hidden">
+      <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 flex items-center justify-between gap-4">
+        <div class="text-blue-900 text-sm">
+          <strong>排序大考驗：</strong> 點擊語音播放整組情境對話，並在每張卡片旁填入或選取先後順序 <strong>1、2、3、4</strong>（共 4 題，每格 1.5 分，滿分 24 分）。
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Task 1 -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 custom-shadow">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="bg-indigo-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">第 1 小組</span>
+              <span class="text-sm font-bold text-slate-700">登山遠足日曆篇</span>
+            </div>
+            <button onclick="speakAudio('Number one. Is today Sunday the eighth? No, it is not. Number two. It is Thursday the twelfth. Number three. Let us go hiking on Monday the ninth! Number four. We will meet on Wednesday the eleventh.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-play"></i> 播放對話情境
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- card a -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(a)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">8</div>
+                <div class="text-xs text-blue-600 font-bold">Sun.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t1-a" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <!-- card b -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(a)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">12</div>
+                <div class="text-xs text-blue-600 font-bold">Thur.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t1-b" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <!-- card c -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(c)</span>
+                <div class="text-xl font-bold text-indigo-700 mt-1">9 Mon.</div>
+                <div class="text-xs text-slate-600 font-medium">🎒 小男孩去登山</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t1-c" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <!-- card d -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(d)</span>
+                <div class="text-xl font-bold text-indigo-700 mt-1">11 Wed.</div>
+                <div class="text-xs text-slate-600 font-medium">🎒 登山中談話</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t1-d" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="fb-s4-t1" class="mt-3 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 custom-shadow">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="bg-indigo-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">第 2 小組</span>
+              <span class="text-sm font-bold text-slate-700">探病與看月曆篇</span>
+            </div>
+            <button onclick="speakAudio('Number one. Thursday the twelfth. Number two. It is Friday the thirteenth. Number three. He is sick on Tuesday the tenth. Number four. He feels much better on Friday the thirteenth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-play"></i> 播放對話情境
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- card a -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(a)</span>
+                <div class="text-xl font-bold text-amber-700 mt-1">10 Tue.</div>
+                <div class="text-xs text-slate-600 font-medium">🛌 生病在床</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t2-a" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <!-- card b -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(b)</span>
+                <div class="text-xl font-bold text-amber-700 mt-1">13 Fri.</div>
+                <div class="text-xs text-slate-600 font-medium">🛌 探病中</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t2-b" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <!-- card c -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(c)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">12</div>
+                <div class="text-xs text-blue-600 font-bold">Thur.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t2-c" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <!-- card d -->
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(d)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">13</div>
+                <div class="text-xs text-blue-600 font-bold">Fri.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t2-d" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="fb-s4-t2" class="mt-3 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 custom-shadow">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="bg-indigo-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">第 3 小組</span>
+              <span class="text-sm font-bold text-slate-700">漢堡特賣與作息篇</span>
+            </div>
+            <button onclick="speakAudio('Number one. What time is it? It is six thirty in the morning. Number two. Today is Monday the ninth. Number three. Look! Burgers are eighty dollars on Sunday! Number four. We can go on Saturday the fourteenth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-play"></i> 播放對話情境
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(a)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">9</div>
+                <div class="text-xs text-blue-600 font-bold">Mon.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t3-a" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(b)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">14</div>
+                <div class="text-xs text-blue-600 font-bold">Sat.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t3-b" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(c)</span>
+                <div class="text-xl font-bold text-emerald-600 mt-1">6:30 a.m.</div>
+                <div class="text-xs text-slate-500">早晨時間</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t3-c" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(d)</span>
+                <div class="text-sm font-bold text-orange-600 mt-1">Sunday Sale $80</div>
+                <div class="text-xs text-slate-600">🍔 買漢堡攤位</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t3-d" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="fb-s4-t3" class="mt-3 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Task 4 -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 custom-shadow">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="bg-indigo-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">第 4 小組</span>
+              <span class="text-sm font-bold text-slate-700">日常規劃篇</span>
+            </div>
+            <button onclick="speakAudio('Number one. Is it Tuesday the tenth? Number two. Today is Wednesday the eleventh. Number three. Wake up! It is already six thirty in the morning. Number four. It is Sunday the eighth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-1.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-play"></i> 播放對話情境
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(a)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">11</div>
+                <div class="text-xs text-blue-600 font-bold">Wed.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t4-a" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(b)</span>
+                <div class="text-xl font-bold text-emerald-600 mt-1">6:30 a.m.</div>
+                <div class="text-xs text-slate-500">鬧鐘響了</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t4-b" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(c)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">8</div>
+                <div class="text-xs text-blue-600 font-bold">Sun.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t4-c" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+            <div class="border rounded-2xl p-3 bg-slate-50 flex flex-col justify-between">
+              <div class="text-center">
+                <span class="text-xs font-bold text-slate-400">(d)</span>
+                <div class="text-2xl font-black text-slate-800 mt-1">10</div>
+                <div class="text-xs text-blue-600 font-bold">Tue.</div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <span class="text-xs text-slate-500">順序:</span>
+                <select id="s4-t4-d" class="border border-slate-300 rounded-lg px-2 py-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500">
+                  <option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="fb-s4-t4" class="mt-3 text-xs hidden font-bold"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 5: Listen and Check (Best Response) -->
+    <section id="stage-5" class="stage-section hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Item 1 -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-slate-700">第 1 題</span>
+              <button onclick="speakAudio('What day is today? Option A: It is Sunday. Option B: It is Friday.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽問句與選項
+              </button>
+            </div>
+            <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-rose-500">三月</span>
+              <div class="text-3xl font-black text-rose-700">12</div>
+              <div class="text-xs font-bold text-slate-700">星期日</div>
+              <div class="text-xs text-rose-600 font-semibold mt-1">Friday 50% off SALE</div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-2">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q1" value="A" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(A) It is Sunday.</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q1" value="B" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(B) It is Friday.</span>
+            </label>
+          </div>
+          <div id="fb-s5-q1" class="mt-2 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-slate-700">第 2 題</span>
+              <button onclick="speakAudio('Is today Tuesday? Option A: Yes, it is Tuesday. Option B: No, it is Wednesday.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽問句與選項
+              </button>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-blue-500">三月</span>
+              <div class="text-3xl font-black text-blue-700">15</div>
+              <div class="text-xs font-bold text-slate-700">星期三</div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-2">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q2" value="A" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(A) Yes, it is Tuesday.</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q2" value="B" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(B) No, it is Wednesday.</span>
+            </label>
+          </div>
+          <div id="fb-s5-q2" class="mt-2 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-slate-700">第 3 題</span>
+              <button onclick="speakAudio('What day is today, Dad? Option A: Today is Tuesday, March fourteenth. Option B: Today is Saturday, March eighteenth.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽問句與選項
+              </button>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-amber-600">三月</span>
+              <div class="text-3xl font-black text-amber-800">14</div>
+              <div class="text-xs font-bold text-slate-700">星期二</div>
+              <div class="text-xs text-amber-700 mt-1">🍳 早晨起床做早餐圖</div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-2">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q3" value="A" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(A) Today is Tuesday, March 14.</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q3" value="B" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(B) Today is Saturday, March 18.</span>
+            </label>
+          </div>
+          <div id="fb-s5-q3" class="mt-2 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-slate-700">第 4 題</span>
+              <button onclick="speakAudio('Are you ready for school? Option A: Yes, it is six thirty on Thursday morning. Option B: No, it is Sunday night.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽問句與選項
+              </button>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-indigo-500">三月</span>
+              <div class="text-3xl font-black text-indigo-800">16</div>
+              <div class="text-xs font-bold text-slate-700">星期四 (6:30 AM)</div>
+              <div class="text-xs text-indigo-600 mt-1">🎒 準備書包上學圖</div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-2">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q4" value="A" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(A) Yes, it is 6:30 on Thursday.</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q4" value="B" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(B) No, it is Sunday night.</span>
+            </label>
+          </div>
+          <div id="fb-s5-q4" class="mt-2 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-slate-700">第 5 題</span>
+              <button onclick="speakAudio('Can we get the burger discount today? Option A: Yes, today is Friday. Option B: No, today is Saturday.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽問句與選項
+              </button>
+            </div>
+            <div class="bg-orange-50 border border-orange-200 rounded-2xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-orange-500">三月</span>
+              <div class="text-3xl font-black text-orange-800">18</div>
+              <div class="text-xs font-bold text-slate-700">星期六</div>
+              <div class="text-xs text-orange-600 mt-1">🍔 看板: Friday Sale $80</div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-2">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q5" value="A" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(A) Yes, today is Friday.</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q5" value="B" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(B) No, today is Saturday.</span>
+            </label>
+          </div>
+          <div id="fb-s5-q5" class="mt-2 text-xs hidden font-bold"></div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 custom-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-slate-700">第 6 題</span>
+              <button onclick="speakAudio('Is the toy sale today? Option A: No, it is on Wednesday. Today is Tuesday. Option B: Yes, today is Wednesday.', this)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-volume-high"></i> 聽問句與選項
+              </button>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 text-center my-3">
+              <span class="text-xs font-bold text-emerald-600">三月</span>
+              <div class="text-3xl font-black text-emerald-800">14</div>
+              <div class="text-xs font-bold text-slate-700">星期二</div>
+              <div class="text-xs text-emerald-600 mt-1">🧸 看板: Wed. 50% off</div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-2">
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q6" value="A" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(A) No, it is Wed. Today is Tue.</span>
+            </label>
+            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-sky-50 cursor-pointer">
+              <input type="radio" name="s5-q6" value="B" class="w-4 h-4 text-blue-600">
+              <span class="ml-3 text-sm font-bold text-slate-700">(B) Yes, today is Wednesday.</span>
+            </label>
+          </div>
+          <div id="fb-s5-q6" class="mt-2 text-xs hidden font-bold"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 6: Listen and Match -->
+    <section id="stage-6" class="stage-section hidden space-y-8">
+      
+      <!-- Part 1: Mike's Cleaning Schedule -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 custom-shadow">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div>
+            <span class="bg-teal-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">Part 1</span>
+            <h3 class="text-lg font-bold text-slate-800 inline ml-2">Mike 的大掃除計畫 (Mike's House Cleaning)</h3>
+            <p class="text-xs text-slate-500 mt-1">根據 Mike 的安排，將星期代號填入對應的房間位置 (每格 2 分)。</p>
+          </div>
+          <button onclick="speakAudio('Hi, I am Mike! This week I will clean my home. On Wednesday the eleventh, I will clean my bedroom. On Thursday the twelfth, I will clean the bathroom. On Saturday the fourteenth, I clean the living room. And on Sunday the fifteenth, I clean the kitchen!', this)" class="bg-teal-100 hover:bg-teal-200 text-teal-900 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 transition">
+            <i class="fa-solid fa-volume-high"></i> 聆聽 Mike 的大掃除排程
+          </button>
+        </div>
+
+        <!-- Options Bank -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 p-4 bg-teal-50/60 rounded-2xl border border-teal-100 mb-6">
+          <div class="bg-white p-2.5 rounded-xl text-center border border-teal-200 shadow-sm">
+            <span class="text-xs font-bold text-teal-800">(a)</span>
+            <div class="font-black text-slate-800 text-lg">11</div>
+            <div class="text-xs text-slate-600">星期三</div>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl text-center border border-teal-200 shadow-sm">
+            <span class="text-xs font-bold text-teal-800">(b)</span>
+            <div class="font-black text-slate-800 text-lg">12</div>
+            <div class="text-xs text-slate-600">星期四</div>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl text-center border border-teal-200 shadow-sm">
+            <span class="text-xs font-bold text-teal-800">(c)</span>
+            <div class="font-black text-slate-800 text-lg">13</div>
+            <div class="text-xs text-slate-600">星期五</div>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl text-center border border-teal-200 shadow-sm">
+            <span class="text-xs font-bold text-teal-800">(d)</span>
+            <div class="font-black text-slate-800 text-lg">14</div>
+            <div class="text-xs text-slate-600">星期六</div>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl text-center border border-teal-200 shadow-sm col-span-2 sm:col-span-1">
+            <span class="text-xs font-bold text-teal-800">(e)</span>
+            <div class="font-black text-slate-800 text-lg">15</div>
+            <div class="text-xs text-slate-600">星期日</div>
+          </div>
+        </div>
+
+        <!-- House Diagram representation -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto border-4 border-slate-300 rounded-3xl p-4 bg-slate-50 relative">
+          <!-- 2F Bedroom -->
+          <div class="border-2 border-indigo-200 bg-white rounded-2xl p-4 text-center">
+            <div class="text-2xl mb-1">🛏️</div>
+            <div class="font-bold text-slate-700 text-sm">(1) 二樓臥室 (Bedroom)</div>
+            <div class="mt-3 flex items-center justify-center gap-2">
+              <span class="text-xs text-slate-500 font-bold">填入代號:</span>
+              <select id="s6-r1" class="border-2 border-indigo-300 rounded-xl px-3 py-1 font-black text-indigo-700 bg-indigo-50">
+                <option value="">選擇</option><option value="a">(a) 11 星期三</option><option value="b">(b) 12 星期四</option><option value="c">(c) 13 星期五</option><option value="d">(d) 14 星期六</option><option value="e">(e) 15 星期日</option>
+              </select>
+            </div>
+            <div id="fb-s6-r1" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+
+          <!-- 2F Bathroom -->
+          <div class="border-2 border-sky-200 bg-white rounded-2xl p-4 text-center">
+            <div class="text-2xl mb-1">🛁</div>
+            <div class="font-bold text-slate-700 text-sm">(2) 二樓浴室 (Bathroom)</div>
+            <div class="mt-3 flex items-center justify-center gap-2">
+              <span class="text-xs text-slate-500 font-bold">填入代號:</span>
+              <select id="s6-r2" class="border-2 border-sky-300 rounded-xl px-3 py-1 font-black text-sky-700 bg-sky-50">
+                <option value="">選擇</option><option value="a">(a) 11 星期三</option><option value="b">(b) 12 星期四</option><option value="c">(c) 13 星期五</option><option value="d">(d) 14 星期六</option><option value="e">(e) 15 星期日</option>
+              </select>
+            </div>
+            <div id="fb-s6-r2" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+
+          <!-- 1F Living Room -->
+          <div class="border-2 border-amber-200 bg-white rounded-2xl p-4 text-center">
+            <div class="text-2xl mb-1">🛋️</div>
+            <div class="font-bold text-slate-700 text-sm">(3) 一樓客廳 (Living Room)</div>
+            <div class="mt-3 flex items-center justify-center gap-2">
+              <span class="text-xs text-slate-500 font-bold">填入代號:</span>
+              <select id="s6-r3" class="border-2 border-amber-300 rounded-xl px-3 py-1 font-black text-amber-700 bg-amber-50">
+                <option value="">選擇</option><option value="a">(a) 11 星期三</option><option value="b">(b) 12 星期四</option><option value="c">(c) 13 星期五</option><option value="d">(d) 14 星期六</option><option value="e">(e) 15 星期日</option>
+              </select>
+            </div>
+            <div id="fb-s6-r3" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+
+          <!-- 1F Kitchen -->
+          <div class="border-2 border-rose-200 bg-white rounded-2xl p-4 text-center">
+            <div class="text-2xl mb-1">🍳</div>
+            <div class="font-bold text-slate-700 text-sm">(4) 一樓廚房 (Kitchen)</div>
+            <div class="mt-3 flex items-center justify-center gap-2">
+              <span class="text-xs text-slate-500 font-bold">填入代號:</span>
+              <select id="s6-r4" class="border-2 border-rose-300 rounded-xl px-3 py-1 font-black text-rose-700 bg-rose-50">
+                <option value="">選擇</option><option value="a">(a) 11 星期三</option><option value="b">(b) 12 星期四</option><option value="c">(c) 13 星期五</option><option value="d">(d) 14 星期六</option><option value="e">(e) 15 星期日</option>
+              </select>
+            </div>
+            <div id="fb-s6-r4" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2: Tim's Festival Calendar -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 custom-shadow">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div>
+            <span class="bg-purple-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">Part 2</span>
+            <h3 class="text-lg font-bold text-slate-800 inline ml-2">Tim 的節慶月曆 (Tim's Festival Calendar)</h3>
+            <p class="text-xs text-slate-500 mt-1">Tim 想知道今年他喜歡的節慶在星期幾，將星期代號填入對應空格 (每格 2 分)。</p>
+          </div>
+          <button onclick="speakAudio('Hello, my favorite festivals! Number one is Halloween on October thirty-first, Tuesday. Number two is Christmas on December twenty-fifth, Monday. Number three is New Years Eve on December thirty-first, Thursday!', this)" class="bg-purple-100 hover:bg-purple-200 text-purple-900 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 transition">
+            <i class="fa-solid fa-volume-high"></i> 聆聽 Tim 的節慶日期
+          </button>
+        </div>
+
+        <!-- Options Bank -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-purple-50/60 rounded-2xl border border-purple-100 mb-6">
+          <div class="bg-white p-3 rounded-xl text-center border border-purple-200 shadow-sm">
+            <span class="text-xs font-bold text-purple-800">(a)</span>
+            <div class="font-black text-slate-800 text-xl">25</div>
+            <div class="text-xs font-semibold text-slate-600">星期一</div>
+          </div>
+          <div class="bg-white p-3 rounded-xl text-center border border-purple-200 shadow-sm">
+            <span class="text-xs font-bold text-purple-800">(b)</span>
+            <div class="font-black text-slate-800 text-xl">31</div>
+            <div class="text-xs font-semibold text-slate-600">星期二</div>
+          </div>
+          <div class="bg-white p-3 rounded-xl text-center border border-purple-200 shadow-sm">
+            <span class="text-xs font-bold text-purple-800">(c)</span>
+            <div class="font-black text-slate-800 text-xl">31</div>
+            <div class="text-xs font-semibold text-slate-600">星期四</div>
+          </div>
+          <div class="bg-white p-3 rounded-xl text-center border border-purple-200 shadow-sm">
+            <span class="text-xs font-bold text-purple-800">(d)</span>
+            <div class="font-black text-slate-800 text-xl">25</div>
+            <div class="text-xs font-semibold text-slate-600">星期五</div>
+          </div>
+        </div>
+
+        <!-- Slots -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 text-center">
+            <div class="text-xs text-purple-600 font-bold mb-1">節慶空格 (1)</div>
+            <div class="text-base font-bold text-slate-700 mb-3">🎃 萬聖夜 (10/31)</div>
+            <select id="s6-fest-1" class="border-2 border-purple-300 rounded-xl px-3 py-1.5 font-black text-purple-700 bg-white">
+              <option value="">選擇代號</option>
+              <option value="a">(a) 25 星期一</option>
+              <option value="b">(b) 31 星期二</option>
+              <option value="c">(c) 31 星期四</option>
+              <option value="d">(d) 25 星期五</option>
+            </select>
+            <div id="fb-s6-fest-1" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+
+          <div class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 text-center">
+            <div class="text-xs text-purple-600 font-bold mb-1">節慶空格 (2)</div>
+            <div class="text-base font-bold text-slate-700 mb-3">🎄 聖誕節 (12/25)</div>
+            <select id="s6-fest-2" class="border-2 border-purple-300 rounded-xl px-3 py-1.5 font-black text-purple-700 bg-white">
+              <option value="">選擇代號</option>
+              <option value="a">(a) 25 星期一</option>
+              <option value="b">(b) 31 星期二</option>
+              <option value="c">(c) 31 星期四</option>
+              <option value="d">(d) 25 星期五</option>
+            </select>
+            <div id="fb-s6-fest-2" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+
+          <div class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 text-center">
+            <div class="text-xs text-purple-600 font-bold mb-1">節慶空格 (3)</div>
+            <div class="text-base font-bold text-slate-700 mb-3">🎉 跨年夜 (12/31)</div>
+            <select id="s6-fest-3" class="border-2 border-purple-300 rounded-xl px-3 py-1.5 font-black text-purple-700 bg-white">
+              <option value="">選擇代號</option>
+              <option value="a">(a) 25 星期一</option>
+              <option value="b">(b) 31 星期二</option>
+              <option value="c">(c) 31 星期四</option>
+              <option value="d">(d) 25 星期五</option>
+            </select>
+            <div id="fb-s6-fest-3" class="text-xs mt-2 hidden font-bold"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 7: Comprehensive Diagnostic Evaluation Report -->
+    <section id="stage-7" class="stage-section hidden space-y-6">
+      <div id="report-printable" class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 custom-shadow space-y-6">
+        <!-- Report Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-indigo-600 text-white text-xs px-2.5 py-0.5 rounded-full font-bold">個人化學習檔案</span>
+              <span id="report-timestamp" class="text-xs text-slate-400">評測時間：尚未交卷</span>
+            </div>
+            <h3 class="text-2xl font-black text-slate-800">Super Fun 6 英語聽力能力評估報告</h3>
+            <p class="text-xs text-slate-500 mt-1">Lesson 1: What Day Is Today? 核心聽力素養全面診斷</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-print"></i> 列印 / 另存 PDF
+            </button>
+            <button onclick="checkAllAnswers()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow flex items-center gap-1.5">
+              <i class="fa-solid fa-arrows-rotate"></i> 重新診斷評分
+            </button>
+          </div>
+        </div>
+
+        <!-- Score Summary Card -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 rounded-2xl bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 border border-sky-100">
+          <div class="text-center md:border-r border-sky-200 md:pr-4">
+            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">總測驗得分</div>
+            <div id="diag-total-score" class="text-5xl font-black text-indigo-700 mt-1">--</div>
+            <div class="text-xs text-slate-400 mt-1">滿分 100 分</div>
+          </div>
+          <div class="text-center md:border-r border-sky-200 md:pr-4">
+            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">精熟程度評等</div>
+            <div id="diag-level-badge" class="mt-2 inline-block px-3 py-1 rounded-full text-sm font-black bg-indigo-200 text-indigo-900">
+              待交卷評測
+            </div>
+            <div id="diag-level-desc" class="text-xs text-slate-500 mt-1.5">請先完成各關答題並點擊交卷</div>
+          </div>
+          <div class="text-center md:border-r border-sky-200 md:pr-4">
+            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">答題正確率</div>
+            <div id="diag-accuracy" class="text-3xl font-extrabold text-slate-800 mt-1">--%</div>
+            <div class="text-xs text-emerald-600 font-semibold mt-1">6 大主題關卡</div>
+          </div>
+          <div class="text-center flex flex-col justify-center items-center">
+            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">學習徽章認證</div>
+            <div id="diag-badge-icon" class="text-3xl mt-1">🎯</div>
+            <div id="diag-badge-title" class="text-xs font-bold text-slate-700 mt-1">時空探索學徒</div>
+          </div>
+        </div>
+
+        <!-- 4 Core Domains Ability Breakdown -->
+        <div>
+          <h4 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-indigo-600"></i> 四大英語聽力素養指標分析 (Domain Breakdown)
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Domain 1: Phonics -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700">1. 音韻辨析能力 (Phonics & Minimal Pairs)</span>
+                <span id="domain-score-1" class="text-xs font-extrabold text-blue-600">-- / 12 分</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-2">涵蓋 /tʃ/ 與 /ʃ/ (ch/sh) 子音對比，以及 ph/p 雙唇發音辨析。</p>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="domain-bar-1" class="bg-blue-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+              </div>
+              <div id="domain-tip-1" class="text-xs mt-2 text-slate-600 font-medium">尚未計算</div>
+            </div>
+
+            <!-- Domain 2: Days & Numbers -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700">2. 星期與日期掌握度 (Days of Week & Dates)</span>
+                <span id="domain-score-2" class="text-xs font-extrabold text-emerald-600">-- / 32 分</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-2">涵蓋 Monday 至 Sunday 辨識、序數與基數聽音匹配能力。</p>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="domain-bar-2" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+              </div>
+              <div id="domain-tip-2" class="text-xs mt-2 text-slate-600 font-medium">尚未計算</div>
+            </div>
+
+            <!-- Domain 3: Dialogue Comprehension -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700">3. 連續語句與情境理解 (Dialogue Comprehension)</span>
+                <span id="domain-score-3" class="text-xs font-extrabold text-amber-600">-- / 24 分</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-2">聆聽多回合對話並還原事件先後順序邏輯 (Numbering)。</p>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="domain-bar-3" class="bg-amber-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+              </div>
+              <div id="domain-tip-3" class="text-xs mt-2 text-slate-600 font-medium">尚未計算</div>
+            </div>
+
+            <!-- Domain 4: Practical Application -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-bold text-slate-700">4. 生活生活情境應用 (Real-life Application)</span>
+                <span id="domain-score-4" class="text-xs font-extrabold text-purple-600">-- / 32 分</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-2">特賣海報折扣應答、大掃除房間排程與萬聖/聖誕節慶日程規劃。</p>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="domain-bar-4" class="bg-purple-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+              </div>
+              <div id="domain-tip-4" class="text-xs mt-2 text-slate-600 font-medium">尚未計算</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Personalized Feedback & Weakness Reminders -->
+        <div class="p-5 rounded-2xl bg-amber-50/80 border border-amber-200">
+          <h4 class="text-sm font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-stethoscope text-amber-600"></i> 個人化專屬診斷評語 (Diagnostic Comments)
+          </h4>
+          <div id="diag-personal-feedback" class="text-xs md:text-sm text-slate-700 leading-relaxed space-y-2">
+            請完成全部答題並點擊上方「交卷評估」，系統將自動針對您各關卡的作答狀況給予精準學習建議！
+          </div>
+        </div>
+
+        <!-- Actionable Learning Strategies -->
+        <div class="p-5 rounded-2xl bg-sky-50 border border-sky-200">
+          <h4 class="text-sm font-bold text-sky-900 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-sky-600"></i> 後續學習行動方針與弱點補強建議 (Actionable Steps)
+          </h4>
+          <ul id="diag-action-steps" class="text-xs md:text-sm text-slate-700 space-y-2 list-disc pl-5">
+            <li><strong>每日英語晨間報日曆：</strong> 每天起床對鏡子說出今天的句子："Today is [Day of week], [Month] [Date]."</li>
+            <li><strong>發音唇型對比法：</strong> 練習 /ʃ/（安靜噓聲）與 /tʃ/（爆破音）時注意舌尖抵住上顎的觸感區別。</li>
+            <li><strong>生活情境真實演練：</strong> 嘗試將家中週程表（如倒垃圾、掃除、才藝班）轉譯成英文星期標籤。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Action Controls -->
+    <div class="mt-8 flex items-center justify-between">
+      <button onclick="prevStage()" id="btn-prev" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-300 text-slate-700 font-bold hover:bg-slate-50 transition shadow-sm flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i> 上一關
+      </button>
+
+      <div class="flex gap-3">
+        <button onclick="checkCurrentStage()" class="px-5 py-2.5 rounded-2xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold transition flex items-center gap-2">
+          <i class="fa-solid fa-magnifying-glass"></i> 本關即時檢查
+        </button>
+        <button onclick="nextStage()" id="btn-next" class="px-6 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-md flex items-center gap-2">
+          下一關 <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Final Score Modal -->
+  <div id="score-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl transform transition-all border border-slate-100">
+      <div id="modal-trophy" class="w-20 h-20 mx-auto rounded-full bg-amber-100 text-amber-500 text-4xl flex items-center justify-center mb-4 shadow-inner">
+        🏆
+      </div>
+      <h3 class="text-2xl font-black text-slate-800">挑戰成果結算</h3>
+      <p id="modal-feedback" class="text-sm text-slate-500 mt-1">冒險者，這是你在 6 大聽力關卡的總得分！</p>
+      
+      <div class="my-6 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+        <div class="text-sm text-slate-500 font-bold mb-1">最終總得分</div>
+        <div id="modal-total-score" class="text-5xl font-black text-blue-600">0</div>
+        <div class="text-xs text-slate-400 mt-1">滿分 100 分</div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 text-xs mb-6 font-semibold" id="stage-breakdown">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <button onclick="goToReport()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2">
+          <i class="fa-solid fa-file-waveform"></i> 查看完整評估回饋報告
+        </button>
+        <div class="flex gap-2">
+          <button onclick="closeModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition text-xs">
+            回到題目複習
+          </button>
+          <button onclick="resetGame()" class="flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-xs">
+            重新挑戰
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global state
+    let currentStage = 1;
+    let speechRate = 1.0;
+    const stageTitles = {
+      1: { title: "關卡一：發音辨識森林 (Listen and Check)", desc: "點擊喇叭聆聽單字發音，勾選聽到的正確單字（每題 2 分，共 12 分）。" },
+      2: { title: "關卡二：日曆靶場 (Listen and Circle)", desc: "仔細聽關主播報的日期，選出正確的日期牌（每題 2 分，共 12 分）。" },
+      3: { title: "關卡三：時空真假探偵 (Listen and Mark O or X)", desc: "仔細聽句子，相符標 O，不符標 X（每題 2.5 分，共 20 分）。" },
+      4: { title: "關卡四：分鏡排序大師 (Listen and Number)", desc: "聆聽完整情境對話，排出事件的正確先後順序 1、2、3、4（每格 1.5 分，共 24 分）。" },
+      5: { title: "關卡五：最佳應對員 (Listen and Check)", desc: "根據圖意與提問，勾選最正確的回應句代號 A 或 B（每題 3 分，共 18 分）。" },
+      6: { title: "關卡六：生活時程配對所 (Listen and Match)", desc: "Mike 的大掃除與 Tim 的節慶月曆安排（每格 2 分，共 14 分）。" },
+      7: { title: "學習評估診斷與回饋建議報告 (Diagnostic Report)", desc: "全方位分析音韻、字彙、對話理解與生活應用的學習成效與補強方針。" }
+    };
+
+    // Correct Answers Map
+    const answers = {
+      s1: { q1: "shock", q2: "catch", q3: "sheep", q4: "chain", q5: "photo", q6: "phase" },
+      s2: { q1: "C", q2: "B", q3: "A", q4: "C", q5: "C", q6: "B" },
+      s3: { 1: "O", 2: "X", 3: "O", 4: "X", 5: "O", 6: "O", 7: "X", 8: "O" },
+      s4: {
+        t1: { a: "1", b: "2", c: "3", d: "4" },
+        t2: { a: "3", b: "4", c: "1", d: "2" },
+        t3: { a: "2", b: "4", c: "1", d: "3" },
+        t4: { a: "2", b: "3", c: "4", d: "1" }
+      },
+      s5: { q1: "A", q2: "B", q3: "A", q4: "A", q5: "B", q6: "A" },
+      s6: {
+        r1: "a", r2: "b", r3: "d", r4: "e",
+        fest1: "b", fest2: "a", fest3: "c"
+      }
+    };
+
+    // User Selection for OX
+    const userOX = {};
+
+    function selectOX(id, val, btn) {
+      userOX[id] = val;
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ox-btn').forEach(b => {
+        b.classList.remove('bg-emerald-500', 'bg-rose-500', 'text-white');
+      });
+      if (val === 'O') {
+        btn.classList.add('bg-emerald-500', 'text-white');
+      } else {
+        btn.classList.add('bg-rose-500', 'text-white');
+      }
+    }
+
+    // TTS Web Speech API
+    function speakAudio(text, btnElement = null) {
+      if (!('speechSynthesis' in window)) {
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = speechRate;
+
+      if (btnElement) {
+        btnElement.classList.add('speaking');
+        utterance.onend = () => btnElement.classList.remove('speaking');
+        utterance.onerror = () => btnElement.classList.remove('speaking');
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function setSpeechRate(rate) {
+      speechRate = rate;
+      document.getElementById('rate-slow').classList.toggle('bg-sky-500', rate === 0.8);
+      document.getElementById('rate-slow').classList.toggle('text-white', rate === 0.8);
+      document.getElementById('rate-slow').classList.toggle('font-bold', rate === 0.8);
+
+      document.getElementById('rate-normal').classList.toggle('bg-sky-500', rate === 1.0);
+      document.getElementById('rate-normal').classList.toggle('text-white', rate === 1.0);
+      document.getElementById('rate-normal').classList.toggle('font-bold', rate === 1.0);
+    }
+
+    // Navigation
+    function switchStage(stageNum) {
+      currentStage = stageNum;
+      document.querySelectorAll('.stage-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(`stage-${stageNum}`).classList.remove('hidden');
+
+      document.querySelectorAll('.stage-pill').forEach((pill, idx) => {
+        if (idx + 1 === stageNum) {
+          pill.className = "stage-pill active whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm";
+        } else {
+          pill.className = "stage-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-bold transition flex items-center gap-1.5 text-xs md:text-sm text-slate-600 hover:bg-slate-100";
+        }
+      });
+
+      // Update hero text
+      document.getElementById('stage-title').innerText = stageTitles[stageNum].title;
+      document.getElementById('stage-desc').innerText = stageTitles[stageNum].desc;
+
+      // Update Prev / Next button state
+      document.getElementById('btn-prev').disabled = stageNum === 1;
+      document.getElementById('btn-prev').classList.toggle('opacity-50', stageNum === 1);
+      
+      const nextBtn = document.getElementById('btn-next');
+      if (stageNum === 6) {
+        nextBtn.innerHTML = `查看評估報告 <i class="fa-solid fa-file-waveform"></i>`;
+      } else if (stageNum === 7) {
+        nextBtn.innerHTML = `回到第一關 <i class="fa-solid fa-rotate-left"></i>`;
+      } else {
+        nextBtn.innerHTML = `下一關 <i class="fa-solid fa-arrow-right"></i>`;
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function prevStage() {
+      if (currentStage > 1) switchStage(currentStage - 1);
+    }
+
+    function nextStage() {
+      if (currentStage < 6) {
+        switchStage(currentStage + 1);
+      } else if (currentStage === 6) {
+        checkAllAnswers();
+        switchStage(7);
+      } else {
+        switchStage(1);
+      }
+    }
+
+    function goToReport() {
+      closeModal();
+      switchStage(7);
+    }
+
+    // Checking individual stages
+    function checkCurrentStage() {
+      if (currentStage === 1) scoreStage1(true);
+      else if (currentStage === 2) scoreStage2(true);
+      else if (currentStage === 3) scoreStage3(true);
+      else if (currentStage === 4) scoreStage4(true);
+      else if (currentStage === 5) scoreStage5(true);
+      else if (currentStage === 6) scoreStage6(true);
+      else if (currentStage === 7) generateDiagnosticReport();
+    }
+
+    function scoreStage1(showFeedback = false) {
+      let score = 0;
+      for (let i = 1; i <= 6; i++) {
+        const val = document.querySelector(`input[name="s1-q${i}"]:checked`)?.value;
+        const fb = document.getElementById(`fb-s1-q${i}`);
+        if (val === answers.s1[`q${i}`]) {
+          score += 2;
+          if (showFeedback) {
+            fb.className = "mt-2 text-xs font-bold text-emerald-600 block";
+            fb.innerText = "✓ 答對了！";
+          }
+        } else if (showFeedback) {
+          fb.className = "mt-2 text-xs font-bold text-rose-500 block";
+          fb.innerText = `✗ 正確答案為: ${answers.s1['q'+i]}`;
+        }
+      }
+      return score;
+    }
+
+    function scoreStage2(showFeedback = false) {
+      let score = 0;
+      for (let i = 1; i <= 6; i++) {
+        const val = document.querySelector(`input[name="s2-q${i}"]:checked`)?.value;
+        const fb = document.getElementById(`fb-s2-q${i}`);
+        if (val === answers.s2[`q${i}`]) {
+          score += 2;
+          if (showFeedback) {
+            fb.className = "mt-2 text-xs font-bold text-emerald-600 block";
+            fb.innerText = "✓ 答對了！";
+          }
+        } else if (showFeedback) {
+          fb.className = "mt-2 text-xs font-bold text-rose-500 block";
+          fb.innerText = `✗ 正確答案為: (${answers.s2['q'+i]})`;
+        }
+      }
+      return score;
+    }
+
+    function scoreStage3(showFeedback = false) {
+      let score = 0;
+      for (let i = 1; i <= 8; i++) {
+        const val = userOX[`s3-${i}`];
+        const fb = document.getElementById(`fb-s3-${i}`);
+        if (val === answers.s3[i]) {
+          score += 2.5;
+          if (showFeedback) {
+            fb.className = "text-xs mt-2 font-bold text-emerald-600 block";
+            fb.innerText = "✓ 答對！";
+          }
+        } else if (showFeedback) {
+          fb.className = "text-xs mt-2 font-bold text-rose-500 block";
+          fb.innerText = `✗ 正確應為 [${answers.s3[i]}]`;
+        }
+      }
+      return score;
+    }
+
+    function scoreStage4(showFeedback = false) {
+      let score = 0;
+      for (let t = 1; t <= 4; t++) {
+        let tScore = 0;
+        ['a','b','c','d'].forEach(letter => {
+          const val = document.getElementById(`s4-t${t}-${letter}`).value;
+          if (val === answers.s4[`t${t}`][letter]) {
+            score += 1.5;
+            tScore += 1.5;
+          }
+        });
+        const fb = document.getElementById(`fb-s4-t${t}`);
+        if (showFeedback && fb) {
+          const ansStr = `(a)=${answers.s4['t'+t].a}, (b)=${answers.s4['t'+t].b}, (c)=${answers.s4['t'+t].c}, (d)=${answers.s4['t'+t].d}`;
+          if (tScore === 6) {
+            fb.className = "mt-3 text-xs font-bold text-emerald-600 block";
+            fb.innerText = `✓ 本題全對！順序正確！ (+6分)`;
+          } else {
+            fb.className = "mt-3 text-xs font-bold text-rose-500 block";
+            fb.innerText = `✗ 正確排序為: ${ansStr}`;
+          }
+        }
+      }
+      return score;
+    }
+
+    function scoreStage5(showFeedback = false) {
+      let score = 0;
+      for (let i = 1; i <= 6; i++) {
+        const val = document.querySelector(`input[name="s5-q${i}"]:checked`)?.value;
+        const fb = document.getElementById(`fb-s5-q${i}`);
+        if (val === answers.s5[`q${i}`]) {
+          score += 3;
+          if (showFeedback) {
+            fb.className = "mt-2 text-xs font-bold text-emerald-600 block";
+            fb.innerText = "✓ 答對！最佳應對！";
+          }
+        } else if (showFeedback) {
+          fb.className = "mt-2 text-xs font-bold text-rose-500 block";
+          fb.innerText = `✗ 正確答案為: (${answers.s5['q'+i]})`;
+        }
+      }
+      return score;
+    }
+
+    function scoreStage6(showFeedback = false) {
+      let score = 0;
+      // Rooms
+      const rooms = ['r1','r2','r3','r4'];
+      rooms.forEach(r => {
+        const val = document.getElementById(`s6-${r}`).value;
+        const fb = document.getElementById(`fb-s6-${r}`);
+        if (val === answers.s6[r]) {
+          score += 2;
+          if (showFeedback) {
+            fb.className = "text-xs mt-2 font-bold text-emerald-600 block";
+            fb.innerText = "✓ 正確！";
+          }
+        } else if (showFeedback) {
+          fb.className = "text-xs mt-2 font-bold text-rose-500 block";
+          fb.innerText = `✗ 應選 (${answers.s6[r]})`;
+        }
+      });
+      // Festivals
+      const fests = [1, 2, 3];
+      fests.forEach(f => {
+        const val = document.getElementById(`s6-fest-${f}`).value;
+        const fb = document.getElementById(`fb-s6-fest-${f}`);
+        if (val === answers.s6[`fest${f}`]) {
+          score += 2;
+          if (showFeedback) {
+            fb.className = "text-xs mt-2 font-bold text-emerald-600 block";
+            fb.innerText = "✓ 正確！";
+          }
+        } else if (showFeedback) {
+          fb.className = "text-xs mt-2 font-bold text-rose-500 block";
+          fb.innerText = `✗ 應選 (${answers.s6['fest'+f]})`;
+        }
+      });
+      return score;
+    }
+
+    // Generate Diagnostic Evaluation Report
+    function generateDiagnosticReport(s1, s2, s3, s4, s5, s6, total) {
+      const now = new Date();
+      document.getElementById('report-timestamp').innerText = `評測時間：${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+      document.getElementById('diag-total-score').innerText = total;
+      document.getElementById('diag-accuracy').innerText = `${Math.round(total)}%`;
+
+      // 4 Domain calculations:
+      // Domain 1: Phonics (Stage 1: 12 pts)
+      const d1Score = s1;
+      const d1Pct = Math.round((d1Score / 12) * 100);
+      document.getElementById('domain-score-1').innerText = `${d1Score} / 12 分 (${d1Pct}%)`;
+      document.getElementById('domain-bar-1').style.width = `${d1Pct}%`;
+      document.getElementById('domain-tip-1').innerText = d1Pct >= 80 ? "優異！已能精準辨識 ch/sh 及 ph 發音細微差異。" : "需加強 /tʃ/ 與 /ʃ/ 舌頭位置與送氣力道對比練習。";
+
+      // Domain 2: Days & Numbers (Stage 2: 12 pts + Stage 3: 20 pts = 32 pts)
+      const d2Score = s2 + s3;
+      const d2Pct = Math.round((d2Score / 32) * 100);
+      document.getElementById('domain-score-2').innerText = `${d2Score} / 32 分 (${d2Pct}%)`;
+      document.getElementById('domain-bar-2').style.width = `${d2Pct}%`;
+      document.getElementById('domain-tip-2').innerText = d2Pct >= 80 ? "精熟！能快速聽辨 Monday～Sunday 與月中日期序數。" : "建議加強 Tuesday/Thursday 與序數 eleventh、twelfth 等音形對應。";
+
+      // Domain 3: Dialogue Comprehension (Stage 4: 24 pts)
+      const d3Score = s4;
+      const d3Pct = Math.round((d3Score / 24) * 100);
+      document.getElementById('domain-score-3').innerText = `${d3Score} / 24 分 (${d3Pct}%)`;
+      document.getElementById('domain-bar-3').style.width = `${d3Pct}%`;
+      document.getElementById('domain-tip-3').innerText = d3Pct >= 80 ? "優秀！具備良好的對話事件先後順序推理與情境捕捉能力。" : "可多練習抓住錄音中的關鍵連接詞 (First, then, look at...) 與數字序號。";
+
+      // Domain 4: Real-life Application (Stage 5: 18 pts + Stage 6: 14 pts = 32 pts)
+      const d4Score = s5 + s6;
+      const d4Pct = Math.round((d4Score / 32) * 100);
+      document.getElementById('domain-score-4').innerText = `${d4Score} / 32 分 (${d4Pct}%)`;
+      document.getElementById('domain-bar-4').style.width = `${d4Pct}%`;
+      document.getElementById('domain-tip-4').innerText = d4Pct >= 80 ? "出色！能將英語靈活應用於商品特賣、掃除及節慶日程中。" : "練習在看海報 (Sale / 50% off) 時，同步比對今天星期與特價星期。";
+
+      // Level Assessment
+      const badge = document.getElementById('diag-level-badge');
+      const badgeDesc = document.getElementById('diag-level-desc');
+      const badgeIcon = document.getElementById('diag-badge-icon');
+      const badgeTitle = document.getElementById('diag-badge-title');
+
+      if (total >= 90) {
+        badge.className = "mt-2 inline-block px-3 py-1 rounded-full text-sm font-black bg-emerald-100 text-emerald-800";
+        badge.innerText = "🌟 卓越精熟 (Master)";
+        badgeDesc.innerText = "聽力理解力極高，完全掌握時空與生活日程！";
+        badgeIcon.innerText = "🏆";
+        badgeTitle.innerText = "時空英語領航員";
+      } else if (total >= 75) {
+        badge.className = "mt-2 inline-block px-3 py-1 rounded-full text-sm font-black bg-blue-100 text-blue-800";
+        badge.innerText = "👍 良好精進 (Advanced)";
+        badgeDesc.innerText = "大部分概念熟練，微調易混淆細節即可奪冠！";
+        badgeIcon.innerText = "🧭";
+        badgeTitle.innerText = "日曆探索先鋒";
+      } else if (total >= 60) {
+        badge.className = "mt-2 inline-block px-3 py-1 rounded-full text-sm font-black bg-amber-100 text-amber-800";
+        badge.innerText = "⚡ 穩定奠基 (Basic)";
+        badgeDesc.innerText = "基礎概念已建立，建議多重複聆聽對話細節。";
+        badgeIcon.innerText = "🎒";
+        badgeTitle.innerText = "時空旅行冒險者";
+      } else {
+        badge.className = "mt-2 inline-block px-3 py-1 rounded-full text-sm font-black bg-rose-100 text-rose-800";
+        badge.innerText = "💪 待加強需複習 (Needs Practice)";
+        badgeDesc.innerText = "別灰心！多運用慢速語音每日聽讀 10 分鐘。";
+        badgeIcon.innerText = "🌱";
+        badgeTitle.innerText = "潛力新星學徒";
+      }
+
+      // Generate Diagnostic Comments & Targeted Advice
+      const comments = [];
+      const actions = [];
+
+      if (s1 < 10) {
+        comments.push(`<li><strong>發音辨識盲點：</strong> 在單字 minimal pairs（如 chock/shock、cash/catch、sheep/cheap）辨識出現猶豫。通常是因為 /ʃ/ 與 /tʃ/ 的爆破感未能即時區分。</li>`);
+        actions.push(`<li><strong>「噓聲 vs 咳嗽」唇形對比練習：</strong> 練習 /ʃ/ 時想像將食指放唇前發出「噓——」，練習 /tʃ/ 時感受舌尖在牙齦後方輕壓後彈開的爆破聲。</li>`);
+      } else {
+        comments.push(`<li><strong>發音辨識亮眼：</strong> 具備敏銳的音素耳朵，能準確區分相近子音！</li>`);
+      }
+
+      if (s2 + s3 < 25) {
+        comments.push(`<li><strong>日曆與序數混淆：</strong> 在聽辨 Tuesday（星期二）與 Thursday（星期四）、或是 11th、12th、13th、14th 等連續日期時容易漏聽字尾。</li>`);
+        actions.push(`<li><strong>「每日晨間月曆報」口說任務：</strong> 每天早上起床翻閱實體或電子日曆，大聲念出今天與明天的星期與日期，連續堅持 7 天。</li>`);
+      } else {
+        comments.push(`<li><strong>星期與日期掌握佳：</strong> 日期數字與星期名稱連結迅速且正確率高。</li>`);
+      }
+
+      if (s4 < 18) {
+        comments.push(`<li><strong>長句情境序列組織弱項：</strong> 聆聽多句描述時，容易被背景資訊分散注意力，影響事件順序排列。</li>`);
+        actions.push(`<li><strong>「關鍵字捕捉法」訓練：</strong> 聽長對話時，先拿筆速記聽到的第一個星期或人名動作，不要試圖聽懂每一個字，先抓主幹！</li>`);
+      } else {
+        comments.push(`<li><strong>邏輯序列組織力強：</strong> 能在一段連續英語會話中精準掌握事件先後發展順序。</li>`);
+      }
+
+      if (s5 + s6 < 24) {
+        comments.push(`<li><strong>生活海報與情境推理待補強：</strong> 在面對「星期特賣」與「今天到底是不是特賣日」的雙重推論時，需要更多思考時間。</li>`);
+        actions.push(`<li><strong>「生活特賣尋寶」情境對話：</strong> 觀察超市或商場宣傳單上的特定星期優惠，自己練習造句：「Is today Wednesday? No, the 50% sale is on Friday!」</li>`);
+      } else {
+        comments.push(`<li><strong>生活情境應用極佳：</strong> 能把課堂所學無縫連結到生活大掃除、萬聖節與特賣會的日常對話中！</li>`);
+      }
+
+      // Fill feedback
+      document.getElementById('diag-personal-feedback').innerHTML = `<ul class="list-disc pl-5 space-y-1.5">${comments.join('')}</ul>`;
+      document.getElementById('diag-action-steps').innerHTML = actions.length > 0 ? actions.join('') : `
+        <li><strong>持續維持高敏銳度：</strong> 嘗試挑戰「正常語速」，甚至遮住文字只靠聽力寫下正確星期。</li>
+        <li><strong>拓展聽力廣度：</strong> 嘗試聆聽兒童英文廣播或 YouTube 英語童謠中的天氣與星期歌謠！</li>
+      `;
+    }
+
+    // Final Submission Check
+    function checkAllAnswers() {
+      const s1 = scoreStage1(true);
+      const s2 = scoreStage2(true);
+      const s3 = scoreStage3(true);
+      const s4 = scoreStage4(true);
+      const s5 = scoreStage5(true);
+      const s6 = scoreStage6(true);
+      const total = s1 + s2 + s3 + s4 + s5 + s6;
+
+      document.getElementById('hero-score').innerText = `${total} / 100`;
+      document.getElementById('hero-progress').innerText = `6 / 6 關`;
+
+      // Modal breakdown
+      const breakdown = document.getElementById('stage-breakdown');
+      breakdown.innerHTML = `
+        <div class="p-2 bg-white rounded-lg border">關卡 1: <span class="text-blue-600 font-bold">${s1}/12</span></div>
+        <div class="p-2 bg-white rounded-lg border">關卡 2: <span class="text-blue-600 font-bold">${s2}/12</span></div>
+        <div class="p-2 bg-white rounded-lg border">關卡 3: <span class="text-blue-600 font-bold">${s3}/20</span></div>
+        <div class="p-2 bg-white rounded-lg border">關卡 4: <span class="text-blue-600 font-bold">${s4}/24</span></div>
+        <div class="p-2 bg-white rounded-lg border">關卡 5: <span class="text-blue-600 font-bold">${s5}/18</span></div>
+        <div class="p-2 bg-white rounded-lg border">關卡 6: <span class="text-blue-600 font-bold">${s6}/14</span></div>
+      `;
+
+      document.getElementById('modal-total-score').innerText = total;
+
+      const trophy = document.getElementById('modal-trophy');
+      const feedback = document.getElementById('modal-feedback');
+      if (total >= 90) {
+        trophy.innerText = '🏆';
+        feedback.innerText = '太出色了！你是英語聽力時空探險大師！';
+        try {
+          confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        } catch (e) {}
+      } else if (total >= 70) {
+        trophy.innerText = '🌟';
+        feedback.innerText = '表現很好！已產出專屬弱點補強與診斷報告！';
+      } else {
+        trophy.innerText = '💪';
+        feedback.innerText = '已生成診斷回饋！查看學習行動方針再試一次吧！';
+      }
+
+      // Generate comprehensive report behind the scenes
+      generateDiagnosticReport(s1, s2, s3, s4, s5, s6, total);
+
+      document.getElementById('score-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('score-modal').classList.add('hidden');
+    }
+
+    function resetGame() {
+      // Clear inputs
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.querySelectorAll('select').forEach(s => s.value = "");
+      document.querySelectorAll('.ox-btn').forEach(b => b.classList.remove('bg-emerald-500', 'bg-rose-500', 'text-white'));
+      document.querySelectorAll('[id^="fb-"]').forEach(fb => {
+        fb.classList.add('hidden');
+        fb.innerText = "";
+      });
+      for (let k in userOX) delete userOX[k];
+
+      document.getElementById('hero-score').innerText = "-- / 100";
+      document.getElementById('hero-progress').innerText = "0 / 6 關";
+      closeModal();
+      switchStage(1);
+    }
+  </script>
+</body>
+</html>
